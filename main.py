@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""make.fun entry for news-image-20261122 (Python 3.13, standard library only).
+"""Entry program for the news-image-20261122 bounty.
 
-The entry's image is poster.png beside this file (drawn by render_poster.py);
-this program copies it to /output/entry.png. Outside the grader's container,
-MAKEFUN_OUTPUT_DIR stands in for /output:
-    mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
+The image this entry submits is poster.png, drawn by render_poster.py and
+kept next to this file. The grader expects the image at /output/entry.png,
+so emit the poster's bytes there (MAKEFUN_OUTPUT_DIR overrides /output when
+running outside the grader's container).
 """
 
 import os
-import shutil
 from pathlib import Path
 
-here = Path(__file__).resolve().parent
-out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-out_dir.mkdir(parents=True, exist_ok=True)
-shutil.copyfile(here / "poster.png", out_dir / "entry.png")
+poster = Path(__file__).with_name("poster.png")
+target_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+target_dir.mkdir(parents=True, exist_ok=True)
+(target_dir / "entry.png").write_bytes(poster.read_bytes())
